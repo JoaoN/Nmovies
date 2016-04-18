@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Nmovies</string>
+    <string name="title_activity_detail">DetailActivity</string>
+    <string name="large_text">
+        "Material is the metaphor.\n\n"
+    </string>
+    <!--Menu options -->
+    <string name="order_popular">Popular</string>
+    <string name="order_topRated">Top Rated</string>
+    <string name="order_favorite">Favorites</string>
+    <!--Details -->
+    <string name="release_date">Release</string>
+    <string name="title_activity_test">TestActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <!--Trailer fragment -->
+    <string name="content_desc_video_thumbnail">Trailer thumbnail Image</string>
+    <string name="trailer_title">Trailer title</string>
+    <string name="trailer_desc">Trailer description</string>
+</resources>

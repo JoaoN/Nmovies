@@ -1,0 +1,20 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="com.joaonogueira.nmovies.ui.ui.DetailActivity">
+    <item
+        android:id="@+id/menu_orderPopular"
+        android:orderInCategory="100"
+        android:title="@string/order_popular"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_orderTopRated"
+        android:orderInCategory="100"
+        android:title="@string/order_topRated"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_orderFavorite"
+        android:orderInCategory="100"
+        android:title="@string/order_favorite"
+        app:showAsAction="never"/>
+</menu>
