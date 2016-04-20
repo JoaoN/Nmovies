@@ -60,10 +60,10 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
-        initializeScreen();
+        initializeScreen(findViewById(android.R.id.content));
     }
     //Initialize the elements
-    public void initializeScreen() {
+    public void initializeScreen(View view) {
         final ViewPager viewPager = (ViewPager) findViewById(R.id.container);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         ImageView poster = (ImageView) findViewById(R.id.posterImage);
@@ -162,7 +162,7 @@ public class DetailActivity extends AppCompatActivity {
 //            to adapter which tell it this associates to which activity.
             switch (position) {
                 case 0:
-                    fragment = Fragment.instantiate(getApplicationContext(), FragmentDetail.class.getName());
+                    fragment = Fragment.instantiate(getApplicationContext(), FragmentOverview.class.getName());
                     break;
                 case 1:
                     fragment = Fragment.instantiate(getApplicationContext(), FragmentTrailer.class.getName());
@@ -171,7 +171,7 @@ public class DetailActivity extends AppCompatActivity {
                     fragment = Fragment.instantiate(getApplicationContext(), FragmentReview.class.getName());
                     break;
                 default:
-                    fragment = Fragment.instantiate(getApplicationContext(), FragmentDetail.class.getName());
+                    fragment = Fragment.instantiate(getApplicationContext(), FragmentOverview.class.getName());
                     break;
             }
 

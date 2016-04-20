@@ -5,9 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
-import com.joaonogueira.nmovies.ui.ui.FragmentMain;
-
-import java.util.ArrayList;
+import com.joaonogueira.nmovies.ui.ui.FragmentPosters;
 
 /**
  * Created by Joao on 28/03/2016.
@@ -75,15 +73,15 @@ public class Movie implements Parcelable {
     }
 
     public Movie(Cursor cursor) {
-        this.mMovieId = cursor.getInt(FragmentMain.COLUMN_MOVIE_ID);
-        this.mTitle = cursor.getString(FragmentMain.COLUMN_TITLE);
-        this.mPosterPath = cursor.getString(FragmentMain.COLUMN_POSTER);
-        this.mBackdropPath = cursor.getString(FragmentMain.COLUMN_BACKDROP);
-        this.mOverview = cursor.getString(FragmentMain.COLUMN_OVERVIEW);
-        this.mVoteAverage = cursor.getFloat(FragmentMain.COLUMN_RATING);
-        this.mReleaseDate = cursor.getString(FragmentMain.COLUMN_DATE);
-        this.mVoteCount= cursor.getInt(FragmentMain.COLUMN_VOTES);
-        this.mPopularity = cursor.getString(FragmentMain.COLUMN_POPULARITY);
+        this.mMovieId = cursor.getInt(FragmentPosters.COLUMN_MOVIE_ID);
+        this.mTitle = cursor.getString(FragmentPosters.COLUMN_TITLE);
+        this.mPosterPath = cursor.getString(FragmentPosters.COLUMN_POSTER);
+        this.mBackdropPath = cursor.getString(FragmentPosters.COLUMN_BACKDROP);
+        this.mOverview = cursor.getString(FragmentPosters.COLUMN_OVERVIEW);
+        this.mVoteAverage = cursor.getFloat(FragmentPosters.COLUMN_RATING);
+        this.mReleaseDate = cursor.getString(FragmentPosters.COLUMN_DATE);
+        this.mVoteCount= cursor.getInt(FragmentPosters.COLUMN_VOTES);
+        this.mPopularity = cursor.getString(FragmentPosters.COLUMN_POPULARITY);
     }
 
 

@@ -1,8 +1,6 @@
 package com.joaonogueira.nmovies.ui.ui;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -20,10 +18,12 @@ import com.joaonogueira.nmovies.ui.data.MovieContract;
 import com.joaonogueira.nmovies.ui.model.Movie;
 import com.joaonogueira.nmovies.ui.model.MovieSerialized;
 import com.joaonogueira.nmovies.ui.tasks.DisplayFavoriteMoviesTask;
+import com.joaonogueira.nmovies.ui.utils.Constants;
 import com.joaonogueira.nmovies.ui.utils.Utility;
 
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,22 +34,22 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * Created by Joao on 28/03/2016.
  */
-public class FragmentMain extends Fragment {
+public class FragmentPosters extends Fragment {
     public ArrayList<Movie> mMovieElements = new ArrayList<Movie>();
     GridView gridView;
     public static String orderParam ="popular";
-    static FragmentMain instance;
+    static FragmentPosters instance;
     public ImageAdapter imageAdapter;
     private ProgressDialog mProgressBar;
-    private Movie movie;
+    private MovieClicked mListener;
+
 
     //Variable for Retrofit
     private Call<MovieSerialized> callMovie;
     private MovieSerialized movieList;
     private MovieAPI movieAPI;
-    private static final String API_URL = "http://api.themoviedb.org/3/";
 
-    private boolean isSavedInstance = false;
+
     public static final String MOVIE_LIST = "MoviesList";
 
     private static final String[] MOVIE_COLUMNS = {
@@ -86,26 +86,32 @@ public class FragmentMain extends Fragment {
 
 
 
-    public FragmentMain(){
+    public FragmentPosters(){
         instance = this;
+    }
+
+    //Called when movie clicked
+    public interface MovieClicked{
+        void onMovieClicked(Movie movie);
     }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if(savedInstanceState != null && savedInstanceState.containsKey(MOVIE_LIST)){
-            isSavedInstance= true;
             mMovieElements = savedInstanceState.getParcelableArrayList(MOVIE_LIST);
         }
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(API_URL)
+                .baseUrl(Constants.API_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         movieAPI = retrofit.create(MovieAPI.class);
-
     }
+
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -118,15 +124,19 @@ public class FragmentMain extends Fragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                //Starting detail activity
-                Intent intent = new Intent(getContext(), DetailActivity.class);
-                intent.putExtra(Intent.EXTRA_TEXT, mMovieElements.get(position));
-                startActivity(intent);
+                mListener.onMovieClicked(mMovieElements.get(position));
             }
         });
 
         return rootView;
     }
+
+    @Override
+    public void onActivityCreated( Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mListener = (MovieClicked)getActivity();
+    }
+
 
     public void favoriteMovies(){
         DisplayFavoriteMoviesTask displayFavoriteMoviesTask = new DisplayFavoriteMoviesTask(getContext(),getActivity()
@@ -140,7 +150,7 @@ public class FragmentMain extends Fragment {
 
     //Start AsyncTask
     public void updateMovies(){
-        if(orderParam == "favorite"){
+        if(Objects.equals(orderParam, "favorite")){
             mMovieElements.clear();
             imageAdapter.clearItems();
             showProgressBar();
@@ -186,7 +196,6 @@ public class FragmentMain extends Fragment {
                     //Set Adapter
                     imageAdapter.notifyDataSetChanged();
                     mProgressBar.dismiss();
-                    //gridView.setAdapter(imageAdapter);
                 }
             }
             @Override
@@ -202,5 +211,4 @@ public class FragmentMain extends Fragment {
         mProgressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         mProgressBar.show();
     }
-
 }

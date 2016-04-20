@@ -1,12 +1,15 @@
 package com.joaonogueira.nmovies.ui.adapter;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.joaonogueira.nmovies.R;
+import com.joaonogueira.nmovies.ui.utils.Utility;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -37,22 +40,40 @@ public class ImageAdapter extends BaseAdapter {
     }
 
     public View getView(int position, View convertView, ViewGroup parent){
-        ImageView imageview;
-        if (convertView == null){
-            imageview = new ImageView(mContext);
-            imageview.setPadding(0, 0, 0, 0);
-            imageview.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-            imageview.setAdjustViewBounds(true);
-        } else {
-            imageview = (ImageView) convertView;
-        }
+        if(Utility.checkNetwork(mContext)){
+            ImageView imageview;
+            if (convertView == null){
+                imageview = new ImageView(mContext);
+                imageview.setPadding(0, 0, 0, 0);
+                imageview.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                imageview.setAdjustViewBounds(true);
+            } else {
+                imageview = (ImageView) convertView;
+            }
 
-        Picasso.with(mContext)
-                .load(images.get(position))
-                //.placeholder(R.drawable.nopicture)
-                .error(R.drawable.nopicture)
-                .into(imageview);
-        return imageview;
+            Picasso.with(mContext)
+                    .load(images.get(position))
+                    //.placeholder(R.drawable.nopicture)
+                    .error(R.drawable.nopicture)
+                    .into(imageview);
+            return imageview;
+        }else{
+            View grid;
+            LayoutInflater inflater = (LayoutInflater) mContext
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            if (convertView == null) {
+                grid = new View(mContext);
+                grid = inflater.inflate(R.layout.fragment_no_internet, null);
+                TextView textView = (TextView) grid.findViewById(R.id.grid_text);
+                ImageView imageView = (ImageView)grid.findViewById(R.id.grid_image);
+                textView.setText(images.get(position));
+                imageView.setImageResource(R.drawable.nopicture);
+            } else {
+                grid = convertView;
+            }
+            return grid;
+        }
     }
 
     public void addItem(String url){

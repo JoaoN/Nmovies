@@ -25,7 +25,7 @@ public class AnimateFab {
     public static void animateFab(final int position, final Context mContext,
                                    final FloatingActionButton fab, final Movie movie) {
 
-        final int[] colorIntArray = {R.color.colorPrimaryDark,R.color.colorPrimary, R.color.colorAccent};
+        final int[] colorIntArray = {R.color.colorPrimaryDark,R.color.colorTrailer, R.color.colorAccent};
 
         if(position == 2){
             fab.hide();

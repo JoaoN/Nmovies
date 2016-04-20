@@ -13,6 +13,7 @@ import com.joaonogueira.nmovies.R;
 import com.joaonogueira.nmovies.ui.MovieAPI;
 import com.joaonogueira.nmovies.ui.model.Movie;
 import com.joaonogueira.nmovies.ui.model.TrailerList;
+import com.joaonogueira.nmovies.ui.utils.Constants;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -47,8 +48,8 @@ public class FragmentTrailer extends Fragment {
     private List<TrailerList.MovieTrailer> trailerElements;
     public static TrailerList.MovieTrailer trailers;
 
-    public static FragmentDetail newInstance(int sectionNumber) {
-        FragmentDetail fragment = new FragmentDetail();
+    public static FragmentOverview newInstance(int sectionNumber) {
+        FragmentOverview fragment = new FragmentOverview();
         Bundle args = new Bundle();
         args.putInt(ARG_SECTION_NUMBER, sectionNumber);
         fragment.setArguments(args);
@@ -61,9 +62,12 @@ public class FragmentTrailer extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_trailer, container, false);
             //Binding views
             ButterKnife.bind(this, rootView);
-            if (getActivity().getIntent() != null) {
-                mMovie = getActivity().getIntent().getParcelableExtra(Intent.EXTRA_TEXT);
+        if (getActivity().getIntent() != null) {
+            mMovie = getActivity().getIntent().getParcelableExtra(Intent.EXTRA_TEXT);
             }
+        if(getArguments()!=null){
+            mMovie = getArguments().getParcelable(Constants.BUNDLE_CONSTANT);
+        }
             getTrailer();
 
         return rootView;

@@ -13,6 +13,7 @@ import com.joaonogueira.nmovies.R;
 import com.joaonogueira.nmovies.ui.data.MovieContract;
 import com.joaonogueira.nmovies.ui.model.Movie;
 
+
 /**
  * Created by Joao on 14/04/2016.
  */
@@ -28,6 +29,8 @@ public class SetFavoriteTask extends AsyncTask<Movie, Integer, Integer> {
         mContext = context;
         this.rootView = view;
     }
+
+
 
 
     @Override

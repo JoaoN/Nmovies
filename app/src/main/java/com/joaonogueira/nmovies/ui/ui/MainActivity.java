@@ -1,17 +1,18 @@
 package com.joaonogueira.nmovies.ui.ui;
 
-
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.joaonogueira.nmovies.R;
+import com.joaonogueira.nmovies.ui.model.Movie;
+import com.joaonogueira.nmovies.ui.utils.Constants;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements FragmentPosters.MovieClicked{
 
-    public static boolean TWO_PANE;
+    public boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,29 +22,15 @@ public class MainActivity extends AppCompatActivity {
             // The detail container view will be present only in the large-screen layouts
             // (res/layout-sw600dp). If this view is present, then the activity should be
             // in two-pane mode.
-            TWO_PANE = true;
-            // In two-pane mode, show the detail view in this activity by
-            // adding or replacing the detail fragment using a
-            // fragment transaction.
-            if (savedInstanceState == null) {
-                // Add fragment
-                Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-                setSupportActionBar(toolbar);
-//                getSupportFragmentManager().beginTransaction()
-//                        .replace(R.id.movie_detail_container, new FragmentMain())
-//                        .commit();
-            }
+            mTwoPane = true;
         }else{
-            TWO_PANE = false;
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, new FragmentMain())
-                    .commit();
+            mTwoPane = false;
         }
-    }
 
-//    getSupportFragmentManager().beginTransaction().
-//    add(R.id.container, new FragmentMain()).
-//    commit();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, new FragmentPosters())
+                .commit();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -54,25 +41,47 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        FragmentMain fragment = FragmentMain.instance;
+        FragmentPosters fragment = FragmentPosters.instance;
 
         if (id == R.id.menu_orderTopRated) {
-            FragmentMain.orderParam = "top_rated";
+            FragmentPosters.orderParam = "top_rated";
             fragment.updateMovies();
         }
         else if (id == R.id.menu_orderPopular) {
-            FragmentMain.orderParam = "popular";
+            FragmentPosters.orderParam = "popular";
             fragment.updateMovies();
         }
         else if (id == R.id.menu_orderFavorite) {
-            FragmentMain.orderParam = "favorite";
+            FragmentPosters.orderParam = "favorite";
             fragment.updateMovies();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onMovieClicked(Movie movie) {
+        onItemClicked(movie);
+    }
 
-    /////////Teste////////
+    //called when movie clicked
+    private void onItemClicked(Movie movie) {
+        if (mTwoPane) {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable(Constants.BUNDLE_CONSTANT, movie);
+            FragmentDetail fragment = new FragmentDetail();
+            fragment.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.movie_detail_container, fragment)
+                    .addToBackStack(null)
+                    .commit();
+        }
+        if (!mTwoPane) {
+            //Starting detail activity
+            Intent intent = new Intent(this, DetailActivity.class);
+            intent.putExtra(Intent.EXTRA_TEXT, movie);
+            startActivity(intent);
+        }
+    }
 
 }

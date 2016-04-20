@@ -2,7 +2,6 @@ package com.joaonogueira.nmovies.ui.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,7 +14,7 @@ import com.joaonogueira.nmovies.ui.MovieAPI;
 import com.joaonogueira.nmovies.ui.adapter.ReviewAdapter;
 import com.joaonogueira.nmovies.ui.model.Movie;
 import com.joaonogueira.nmovies.ui.model.ReviewList;
-import com.joaonogueira.nmovies.ui.model.TrailerList;
+import com.joaonogueira.nmovies.ui.utils.Constants;
 
 import java.util.List;
 
@@ -40,8 +39,8 @@ public class FragmentReview extends Fragment {
     private List<ReviewList.MovieReview> reviewElements;
     private ReviewAdapter mReviewAdapter;
 
-    public static FragmentDetail newInstance(int sectionNumber) {
-        FragmentDetail fragment = new FragmentDetail();
+    public static FragmentReview newInstance(int sectionNumber) {
+        FragmentReview fragment = new FragmentReview();
         Bundle args = new Bundle();
         args.putInt(ARG_SECTION_NUMBER, sectionNumber);
         fragment.setArguments(args);
@@ -57,6 +56,9 @@ public class FragmentReview extends Fragment {
 
         if(getActivity().getIntent()!=null) {
             mMovie = getActivity().getIntent().getParcelableExtra(Intent.EXTRA_TEXT);
+        }
+        if(getArguments()!=null){
+            mMovie = getArguments().getParcelable(Constants.BUNDLE_CONSTANT);
         }
         setupRecyclerView(recyclerView);
         getReview();

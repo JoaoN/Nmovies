@@ -8,7 +8,7 @@ import android.os.AsyncTask;
 import com.joaonogueira.nmovies.ui.adapter.ImageAdapter;
 import com.joaonogueira.nmovies.ui.data.MovieContract;
 import com.joaonogueira.nmovies.ui.model.Movie;
-import com.joaonogueira.nmovies.ui.ui.FragmentMain;
+import com.joaonogueira.nmovies.ui.utils.Utility;
 
 import java.util.ArrayList;
 
@@ -19,6 +19,7 @@ public class DisplayFavoriteMoviesTask extends AsyncTask<Void ,Void,ArrayList<Mo
 
     private Context mContext;
     private Activity mActivity;
+    private boolean mConnection;
 
     private  ArrayList<Movie> mMovieList = new ArrayList<Movie>();
     private ImageAdapter imageAdapter;
@@ -59,14 +60,23 @@ public class DisplayFavoriteMoviesTask extends AsyncTask<Void ,Void,ArrayList<Mo
     protected void onPostExecute(ArrayList<Movie> movies) {
         super.onPostExecute(movies);
 
+        mConnection = Utility.checkNetwork(mContext);
+
         if(movies != null){
             //imageAdapter.clearItems();
 
             Movie movieHandle;
 
-            for(int i = 0; i < movies.size(); i++){
-                movieHandle = movies.get(i);
-                imageAdapter.addItem(movieHandle.getmPosterPath());
+            if (mConnection) {
+                for(int i = 0; i < movies.size(); i++){
+                    movieHandle = movies.get(i);
+                    imageAdapter.addItem(movieHandle.getmPosterPath());
+                }
+            }else{
+                for(int i = 0; i < movies.size(); i++){
+                    movieHandle = movies.get(i);
+                    imageAdapter.addItem(movieHandle.getmTitle());
+                }
             }
             imageAdapter.notifyDataSetChanged();
         }

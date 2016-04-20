@@ -17,4 +17,5 @@
     <string name="content_desc_video_thumbnail">Trailer thumbnail Image</string>
     <string name="trailer_title">Trailer title</string>
     <string name="trailer_desc">Trailer description</string>
+    <string name="movietitle">MovieTitle</string>
 </resources>
