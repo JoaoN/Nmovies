@@ -2,6 +2,7 @@ package com.joaonogueira.nmovies.ui.ui;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,9 +36,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by Joao on 28/03/2016.
  */
 public class FragmentPosters extends Fragment {
-    public ArrayList<Movie> mMovieElements = new ArrayList<Movie>();
+    public static ArrayList<Movie> mMovieElements = new ArrayList<Movie>();
     GridView gridView;
     public static String orderParam ="popular";
+    private String orderParamAux = orderParam;
     static FragmentPosters instance;
     public ImageAdapter imageAdapter;
     private ProgressDialog mProgressBar;
@@ -95,10 +97,19 @@ public class FragmentPosters extends Fragment {
         void onMovieClicked(Movie movie);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if(mMovieElements.size() != 0){
+            outState.putParcelableArrayList(MOVIE_LIST, mMovieElements);
+        }
+    }
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if(savedInstanceState != null && savedInstanceState.containsKey(MOVIE_LIST)){
+            if(mMovieElements.size() == 0)
             mMovieElements = savedInstanceState.getParcelableArrayList(MOVIE_LIST);
         }
 
@@ -153,6 +164,7 @@ public class FragmentPosters extends Fragment {
         if(Objects.equals(orderParam, "favorite")){
             mMovieElements.clear();
             imageAdapter.clearItems();
+            orderParamAux = orderParam;
             showProgressBar();
             favoriteMovies();
         }else {
@@ -160,11 +172,26 @@ public class FragmentPosters extends Fragment {
                 mMovieElements.clear();
                 imageAdapter.clearItems();
                 showProgressBar();
+                orderParamAux = orderParam;
                 getMovies(orderParam);
-            }else {
+            }
+            else if(Objects.equals(orderParam, orderParamAux)){
+                FetchAdapter();
+            }
+            else {
                 //Handling no network condition
                 Toast.makeText(getContext(), "No network connection, only favorite movies available", Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+
+    public void FetchAdapter(){
+        imageAdapter.clearItems();
+        Movie movieHandle;
+        for(int i = 0; i < mMovieElements.size(); i++){
+            movieHandle = mMovieElements.get(i);
+            imageAdapter.addItem(movieHandle.getmPosterPath());
+            imageAdapter.notifyDataSetChanged();
         }
     }
 
@@ -186,13 +213,7 @@ public class FragmentPosters extends Fragment {
                 mMovieElements = movieList.getMovieList();
                 //Check the array
                 if(mMovieElements != null){
-                    imageAdapter.clearItems();
-                    Movie movieHandle;
-
-                    for(int i = 0; i < mMovieElements.size(); i++){
-                        movieHandle = mMovieElements.get(i);
-                        imageAdapter.addItem(movieHandle.getmPosterPath());
-                    }
+                    FetchAdapter();
                     //Set Adapter
                     imageAdapter.notifyDataSetChanged();
                     mProgressBar.dismiss();

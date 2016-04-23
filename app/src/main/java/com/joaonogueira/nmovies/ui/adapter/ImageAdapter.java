@@ -9,10 +9,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.joaonogueira.nmovies.R;
+import com.joaonogueira.nmovies.ui.ui.FragmentPosters;
+import com.joaonogueira.nmovies.ui.ui.MainActivity;
 import com.joaonogueira.nmovies.ui.utils.Utility;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Created by Joao on 30/03/2016.
@@ -40,7 +44,20 @@ public class ImageAdapter extends BaseAdapter {
     }
 
     public View getView(int position, View convertView, ViewGroup parent){
-        if(Utility.checkNetwork(mContext)){
+        if (!Utility.checkNetwork(mContext) && Objects.equals(FragmentPosters.orderParam, "favorite")) {
+            View grid;
+            LayoutInflater inflater = (LayoutInflater) mContext
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+                grid = new View(mContext);
+                grid = inflater.inflate(R.layout.fragment_no_internet, null);
+                TextView textView = (TextView) grid.findViewById(R.id.grid_text);
+                ImageView imageView = (ImageView)grid.findViewById(R.id.grid_image);
+                textView.setText(images.get(position));
+                imageView.setImageResource(R.drawable.nopicture);
+
+            return grid;
+        } else {
             ImageView imageview;
             if (convertView == null){
                 imageview = new ImageView(mContext);
@@ -57,22 +74,6 @@ public class ImageAdapter extends BaseAdapter {
                     .error(R.drawable.nopicture)
                     .into(imageview);
             return imageview;
-        }else{
-            View grid;
-            LayoutInflater inflater = (LayoutInflater) mContext
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-            if (convertView == null) {
-                grid = new View(mContext);
-                grid = inflater.inflate(R.layout.fragment_no_internet, null);
-                TextView textView = (TextView) grid.findViewById(R.id.grid_text);
-                ImageView imageView = (ImageView)grid.findViewById(R.id.grid_image);
-                textView.setText(images.get(position));
-                imageView.setImageResource(R.drawable.nopicture);
-            } else {
-                grid = convertView;
-            }
-            return grid;
         }
     }
 
